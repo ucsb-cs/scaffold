@@ -470,12 +470,11 @@ export default function ConceptGraph({ highlightedIds, highlightedSubconcepts, o
   useEffect(() => {
     setNodes(nds => nds.map(node => {
       if (node.type === 'detail') {
+        const greyed = hasSelection && !highlightedIds.has(node.data.conceptId as string);
         return {
           ...node,
-          data: {
-            ...node.data,
-            greyed: hasSelection && !highlightedIds.has(node.data.conceptId as string),
-          },
+          style: { ...node.style, opacity: greyed ? 0.5 : 1 },
+          data:  { ...node.data, greyed },
         };
       }
       return {
