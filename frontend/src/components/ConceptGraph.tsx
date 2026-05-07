@@ -367,6 +367,9 @@ export default function ConceptGraph({ highlightedIds, highlightedSubconcepts, o
   const nodesRef = useRef(nodes);
   useEffect(() => { nodesRef.current = nodes; }, [nodes]);
 
+  const highlightedIdsRef = useRef(highlightedIds);
+  useEffect(() => { highlightedIdsRef.current = highlightedIds; }, [highlightedIds]);
+
   useEffect(() => {
     if (restoredRef.current || !restoredDetailCards?.length) return;
     restoredRef.current = true;
@@ -385,7 +388,7 @@ export default function ConceptGraph({ highlightedIds, highlightedSubconcepts, o
         type:     'detail' as const,
         position: { x: card.posX, y: card.posY },
         data:     { cardType: card.cardType, itemLabel: card.itemLabel,
-                    conceptColor: card.conceptColor, cardContent },
+                    conceptId: card.conceptId, conceptColor: card.conceptColor, cardContent },
       };
     });
     const newEdges = restoredDetailCards.map((card, i) => ({
@@ -441,21 +444,25 @@ export default function ConceptGraph({ highlightedIds, highlightedSubconcepts, o
 
     const nodeId = `detail-${Date.now()}`;
 
+    const isHighlighted = highlightedIdsRef.current.has(conceptId);
+    const hasSelectionNow = highlightedIdsRef.current.size > 0;
+    const edgeColor = (hasSelectionNow && !isHighlighted) ? '#cbd5e1' : conceptColor;
+
     setNodes(nds => [...nds, {
       id:       nodeId,
       type:     'detail',
       position,
-      data: { cardType, itemLabel, conceptColor, cardContent },
+      data: { cardType, itemLabel, conceptColor, cardContent, conceptId },
     }]);
 
     setEdges(eds => [...eds, {
-      id:     `detail-edge-${nodeId}`,
-      source:  conceptId,
-      target:  nodeId,
+      id:           `detail-edge-${nodeId}`,
+      source:        conceptId,
+      target:        nodeId,
       targetHandle: 'bottom',
-      type:   'smooth',
-      style:  { stroke: conceptColor, strokeWidth: 4, strokeDasharray: '4 2' },
-      markerEnd: { type: MarkerType.ArrowClosed, color: conceptColor },
+      type:         'smooth',
+      style:        { stroke: edgeColor, strokeWidth: 4, strokeDasharray: '4 2' },
+      markerEnd:    { type: MarkerType.ArrowClosed, color: edgeColor },
       data:         { conceptColor },
     }]);
 
