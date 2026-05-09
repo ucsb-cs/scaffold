@@ -6,7 +6,7 @@ export interface MajorConcept {
 }
 
 export const majorConcepts: MajorConcept[] = [
-  { id: 'data-types',        label: 'Basic \n Data Types',              color: '#c5d3f9',
+  { id: 'data-types',        label: 'Basic \n Data Types',              color: '#ffd5af',
     subconcepts: ['Numeric (integers, floats)', 'Strings', 'Booleans'] },
   { id: 'data-rep',          label: 'Data \n Representation',     color: '#feaef2',
     subconcepts: ['Binary', 'Hex', 'Decimal'] },

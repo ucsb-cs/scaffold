@@ -53,12 +53,12 @@ function toPastel(hex: string, strength: number = 0.35): string {
 const DeleteDetailContext = createContext<(id: string) => void>(() => {});
 
 const LEVELS = [
-  { label: 'Level 1', color: '#c5d3f9' },
+  { label: 'Level 1', color: '#ffd5af' },
   { label: 'Level 2', color: '#feaef2' },
   { label: 'Level 3', color: '#93ebff' },
   { label: 'Level 4', color: '#fe9a71' },
   { label: 'Level 5', color: '#2bcd9c' },
-  { label: 'Level 6', color: '#f4e87b' },
+  { label: 'Level 6', color: '#c99ffe' },
 ];
 
 function LevelLegend() {
