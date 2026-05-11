@@ -524,7 +524,7 @@ export const conceptContent: Record<string, ConceptContent> = {
     practiceUrl: 'https://us.prairielearn.com/',
   },
   'errors-debugging:Runtime errors': {
-    description: 'A runtime error occurs while the program is running — the syntax is correct, but something goes wrong during execution. Common examples include accessing an index that doesn\'t exist or using the wrong data type for an operation.',
+    description: 'A runtime error occurs while the program is running — the syntax is correct, but something goes wrong during execution. Common examples include accessing an index in a sequencethat doesn\'t exist or using the wrong data type for an operation.',
     example: '# Accessing an index that doesn\'t exist: IndexError\nnumbers = [1, 2, 3]\nnumbers[5]\n\n# Concatenating the wrong data type: TypeError\nresult = "hello" + 5',
     practiceUrl: 'https://us.prairielearn.com/',
   },
