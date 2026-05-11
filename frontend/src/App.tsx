@@ -265,12 +265,14 @@ export default function App() {
             setSelectedQuestionId('');
           }}
         />
-        <QuestionSearch
-          questions={questions}
-          selectedQuestionId={selectedQuestionId}
-          onSelect={setSelectedQuestionId}
-          disabled={!selectedAssessmentId || questions.length === 0}
-        />
+        <div style={{ flex: 1, maxWidth: 300 }}>
+          <QuestionSearch
+            questions={questions}
+            selectedQuestionId={selectedQuestionId}
+            onSelect={setSelectedQuestionId}
+            disabled={!selectedAssessmentId || questions.length === 0}
+          />
+        </div>
         <div style={{
           display: 'flex',
           alignItems: 'center',
