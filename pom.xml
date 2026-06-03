@@ -65,9 +65,24 @@
 
   <build>
     <resources>
+      <!-- Filter only .properties files so binary resources are not corrupted -->
       <resource>
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
+        <includes>
+          <include>**/*.properties</include>
+          <include>**/*.yml</include>
+          <include>**/*.yaml</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>**/*.properties</exclude>
+          <exclude>**/*.yml</exclude>
+          <exclude>**/*.yaml</exclude>
+        </excludes>
       </resource>
     </resources>
     <plugins>
@@ -105,7 +120,7 @@
       </dependencies>
     </profile>
 
-    <!-- Production profile: activated by PRODUCTION=true env var -->
+    <!-- Production profile: activated when the PRODUCTION environment variable is set (any value) -->
     <profile>
       <id>production</id>
       <activation>
