@@ -27,7 +27,7 @@ class ScaffoldApplicationTests {
 
     @Test
     void getAssessmentsReturnsEmptyList() throws Exception {
-        mockMvc.perform(get("/assessments"))
+        mockMvc.perform(get("/api/assessments"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json("[]"));
@@ -35,7 +35,7 @@ class ScaffoldApplicationTests {
 
     @Test
     void validatePinReturnsFalseForUnknownPin() throws Exception {
-        mockMvc.perform(post("/validate-pin")
+        mockMvc.perform(post("/api/validate-pin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"pin\":\"9999\"}"))
                 .andExpect(status().isOk())

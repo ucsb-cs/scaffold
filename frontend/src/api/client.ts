@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL as string;
+const API_BASE = '/api';
 
 export interface Assessment {
   id: string;
@@ -21,22 +21,22 @@ export interface QuestionConcept {
 }
 
 export async function fetchAssessments(): Promise<Assessment[]> {
-  const res = await fetch(`${API_URL}/assessments`);
+  const res = await fetch(`${API_BASE}/assessments`);
   return res.json();
 }
 
 export async function fetchQuestions(assessmentId: string): Promise<Question[]> {
-  const res = await fetch(`${API_URL}/assessments/${assessmentId}/questions`);
+  const res = await fetch(`${API_BASE}/assessments/${assessmentId}/questions`);
   return res.json();
 }
 
 export async function fetchQuestionConcepts(questionId: string): Promise<QuestionConcept[]> {
-  const res = await fetch(`${API_URL}/questions/${questionId}/concepts`);
+  const res = await fetch(`${API_BASE}/questions/${questionId}/concepts`);
   return res.json();
 }
 
 export async function validatePin(pin: string): Promise<boolean> {
-  const res = await fetch(`${API_URL}/validate-pin`, {
+  const res = await fetch(`${API_BASE}/validate-pin`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ pin }),

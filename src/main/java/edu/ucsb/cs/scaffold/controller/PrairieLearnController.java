@@ -1,5 +1,7 @@
 package edu.ucsb.cs.scaffold.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@Tag(name = "PrairieLearn")
 @RestController
 @RequiredArgsConstructor
 public class PrairieLearnController {
@@ -26,7 +29,8 @@ public class PrairieLearnController {
     @Value("${pl.course.instance.id:213859}")
     private String plCourseInstanceId;
 
-    @GetMapping("/test-pl")
+    @Operation(summary = "Proxy request to PrairieLearn API – returns assessments for the configured course instance")
+    @GetMapping("/api/test-pl")
     public Object testPrairieLearn() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Private-Token", plApiToken);
