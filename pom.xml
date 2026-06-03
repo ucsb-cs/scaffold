@@ -34,7 +34,7 @@
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
 
-    <!-- PostgreSQL driver -->
+    <!-- PostgreSQL driver (runtime – only used in production profile) -->
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
@@ -64,6 +64,12 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
@@ -79,4 +85,37 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <!-- Default profile: runs locally with H2 (no Postgres required) -->
+    <profile>
+      <id>localhost</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <springProfiles>development</springProfiles>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>com.h2database</groupId>
+          <artifactId>h2</artifactId>
+          <scope>runtime</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <!-- Production profile: activated by PRODUCTION=true env var -->
+    <profile>
+      <id>production</id>
+      <activation>
+        <property>
+          <name>env.PRODUCTION</name>
+        </property>
+      </activation>
+      <properties>
+        <springProfiles>production</springProfiles>
+      </properties>
+    </profile>
+  </profiles>
 </project>
