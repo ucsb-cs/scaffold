@@ -1,5 +1,6 @@
 package edu.ucsb.cs.scaffold.controller;
 
+import edu.ucsb.cs.scaffold.model.PinRequest;
 import edu.ucsb.cs.scaffold.repository.StudentPinRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,8 +20,8 @@ public class PinController {
 
     @Operation(summary = "Validate a student PIN – returns {\"valid\":true} if the PIN exists")
     @PostMapping("/api/validate-pin")
-    public Map<String, Boolean> validatePin(@RequestBody Map<String, String> body) {
-        String pin = body.get("pin");
+    public Map<String, Boolean> validatePin(@RequestBody PinRequest body) {
+        String pin = body.getPin();
         boolean valid = !studentPinRepository.findByPin(pin).isEmpty();
         return Map.of("valid", valid);
     }
