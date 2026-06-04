@@ -28,7 +28,7 @@ class ScaffoldApplicationTests {
 
     @Test
     void healthCheckReturnsOk() throws Exception {
-        mockMvc.perform(get("/"))
+        mockMvc.perform(get("/api/health"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("ok"));
     }
