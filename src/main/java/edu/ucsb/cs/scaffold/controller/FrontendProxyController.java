@@ -2,11 +2,13 @@ package edu.ucsb.cs.scaffold.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.cloud.gateway.mvc.ProxyExchange;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.ConnectException;
 
@@ -14,16 +16,22 @@ import java.net.ConnectException;
 @RestController
 public class FrontendProxyController {
 
-    @GetMapping({"/", "/{path:^(?!api|oauth2|swagger-ui|h2-console).*}/**"})
+    private static final String PROXY_ROUTE_PATTERN = "/{path:^(?!api|oauth2|swagger-ui|h2-console).*}/**";
+
+    @Value("${frontend.proxy.url:http://localhost:3000}")
+    private String frontendProxyUrl;
+
+    @GetMapping({"/", PROXY_ROUTE_PATTERN})
     public ResponseEntity<?> proxy(ProxyExchange<byte[]> proxy, HttpServletRequest request) {
-        String path = proxy.path("/");
-        String query = "";
-        if (request.getQueryString() != null) {
-            query = "?" + request.getQueryString();
-        }
+        String requestPath = request.getRequestURI();
+        String targetUrl = UriComponentsBuilder.fromUriString(frontendProxyUrl)
+                .path(requestPath)
+                .query(request.getQueryString())
+                .build(true)
+                .toUriString();
 
         try {
-            return proxy.uri("http://localhost:3000/" + path + query).get();
+            return proxy.uri(targetUrl).get();
         } catch (ResourceAccessException e) {
             if (e.getCause() instanceof ConnectException) {
                 String instructions = """
