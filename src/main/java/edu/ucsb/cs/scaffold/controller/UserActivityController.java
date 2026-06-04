@@ -1,6 +1,7 @@
 package edu.ucsb.cs.scaffold.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ucsb.cs.scaffold.model.UserActivity;
@@ -22,13 +23,13 @@ public class UserActivityController {
     @Operation(summary = "Insert a user activity event")
     @PostMapping("/api/user-activity")
     public ResponseEntity<Void> insertUserActivity(@RequestBody UserActivityRequest body) {
-        if (body.pin() == null || body.pin().isBlank() || body.event_type() == null || body.event_type().isBlank()) {
+        if (body.pin() == null || body.pin().isBlank() || body.eventType() == null || body.eventType().isBlank()) {
             return ResponseEntity.badRequest().build();
         }
 
         UserActivity activity = new UserActivity();
         activity.setPin(body.pin());
-        activity.setEventType(body.event_type());
+        activity.setEventType(body.eventType());
         activity.setPayload(writeJson(body.payload() == null ? objectMapper.createObjectNode() : body.payload()));
         userActivityRepository.save(activity);
         return ResponseEntity.noContent().build();
@@ -42,6 +43,6 @@ public class UserActivityController {
         }
     }
 
-    public record UserActivityRequest(String pin, String event_type, JsonNode payload) {
+    public record UserActivityRequest(String pin, @JsonProperty("event_type") String eventType, JsonNode payload) {
     }
 }

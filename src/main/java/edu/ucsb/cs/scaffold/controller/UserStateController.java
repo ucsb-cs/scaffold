@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.ucsb.cs.scaffold.model.UserState;
 import edu.ucsb.cs.scaffold.repository.UserStateRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,9 +46,9 @@ public class UserStateController {
 
         UserState state = userStateRepository.findByPin(body.pin()).orElseGet(UserState::new);
         state.setPin(body.pin());
-        state.setStarredIds(writeJson(body.starred_ids() == null ? List.of() : body.starred_ids()));
-        state.setDetailCards(writeJson(body.detail_cards() == null ? objectMapper.createArrayNode() : body.detail_cards()));
-        state.setMasteredSubconcepts(writeJson(body.mastered_subconcepts() == null ? List.of() : body.mastered_subconcepts()));
+        state.setStarredIds(writeJson(body.starredIds() == null ? List.of() : body.starredIds()));
+        state.setDetailCards(writeJson(body.detailCards() == null ? objectMapper.createArrayNode() : body.detailCards()));
+        state.setMasteredSubconcepts(writeJson(body.masteredSubconcepts() == null ? List.of() : body.masteredSubconcepts()));
         userStateRepository.save(state);
 
         return ResponseEntity.noContent().build();
@@ -78,11 +79,16 @@ public class UserStateController {
         }
     }
 
-    public record UserStateRequest(String pin, List<String> starred_ids, JsonNode detail_cards,
-                                   List<String> mastered_subconcepts) {
+    public record UserStateRequest(
+            String pin,
+            @JsonProperty("starred_ids") List<String> starredIds,
+            @JsonProperty("detail_cards") JsonNode detailCards,
+            @JsonProperty("mastered_subconcepts") List<String> masteredSubconcepts) {
     }
 
-    public record UserStateResponse(List<String> starred_ids, JsonNode detail_cards,
-                                    List<String> mastered_subconcepts) {
+    public record UserStateResponse(
+            @JsonProperty("starred_ids") List<String> starredIds,
+            @JsonProperty("detail_cards") JsonNode detailCards,
+            @JsonProperty("mastered_subconcepts") List<String> masteredSubconcepts) {
     }
 }
