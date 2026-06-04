@@ -44,3 +44,43 @@ export async function validatePin(pin: string): Promise<boolean> {
   const data = await res.json();
   return data.valid;
 }
+
+export interface UserStateResponse {
+  starred_ids: string[];
+  detail_cards: unknown[];
+  mastered_subconcepts: string[];
+}
+
+export async function fetchUserState(pin: string): Promise<UserStateResponse | null> {
+  const res = await fetch(`${API_BASE}/user-state/${encodeURIComponent(pin)}`);
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`Failed to fetch user state for pin ${pin}`);
+  return res.json();
+}
+
+export async function saveUserState(body: {
+  pin: string;
+  starred_ids: string[];
+  detail_cards: unknown[];
+  mastered_subconcepts: string[];
+}): Promise<void> {
+  const res = await fetch(`${API_BASE}/user-state`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`Failed to save user state for pin ${body.pin}`);
+}
+
+export async function logUserActivity(body: {
+  pin: string;
+  event_type: string;
+  payload: object;
+}): Promise<void> {
+  const res = await fetch(`${API_BASE}/user-activity`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`Failed to log user activity for pin ${body.pin}`);
+}
