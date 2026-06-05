@@ -12,7 +12,7 @@ import java.util.Map;
 public class HealthController {
 
     @Operation(summary = "Health check – returns {\"status\":\"ok\"} when the service is running")
-    @GetMapping("/")
+    @GetMapping("/api/health")
     public Map<String, String> healthCheck() {
         return Map.of("status", "ok");
     }
