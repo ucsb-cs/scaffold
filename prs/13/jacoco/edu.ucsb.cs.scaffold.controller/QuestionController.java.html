@@ -23,7 +23,7 @@ public class QuestionController {
   @GetMapping(&quot;/api/questions/{questionId}/concepts&quot;)
   public List&lt;QuestionConcept&gt; getQuestionConcepts(
       @Parameter(description = &quot;UUID of the question&quot;) @PathVariable UUID questionId) {
-<span class="nc" id="L26">    return questionConceptRepository.findByQuestionId(questionId);</span>
+<span class="fc" id="L26">    return questionConceptRepository.findByQuestionId(questionId);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

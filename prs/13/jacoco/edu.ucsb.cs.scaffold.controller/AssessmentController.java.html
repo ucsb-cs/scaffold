@@ -32,7 +32,7 @@ public class AssessmentController {
   @GetMapping(&quot;/api/assessments/{assessmentId}/questions&quot;)
   public List&lt;Question&gt; getQuestions(
       @Parameter(description = &quot;UUID of the assessment&quot;) @PathVariable UUID assessmentId) {
-<span class="nc" id="L35">    return questionRepository.findByAssessmentIdOrderByTitleAsc(assessmentId);</span>
+<span class="fc" id="L35">    return questionRepository.findByAssessmentIdOrderByTitleAsc(assessmentId);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
