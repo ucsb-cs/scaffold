@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WiremockServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">scaffold</a> &gt; <a href="index.source.html" class="el_package">edu.ucsb.cs.scaffold.services.wiremock</a> &gt; <span class="el_source">WiremockServiceImpl.java</span></div><h1>WiremockServiceImpl.java</h1><pre class="source lang-java linenums">package edu.ucsb.cs.scaffold.services.wiremock;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.temporaryRedirect;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.common.ConsoleNotifier;
+import com.github.tomakehurst.wiremock.junit.Stubbing;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+import org.wiremock.extension.jwt.JwtExtensionFactory;
+
+<span class="nc" id="L21">@Slf4j</span>
+@Service(&quot;wiremockService&quot;)
+@Profile(&quot;wiremock&quot;)
+@ConfigurationProperties
+<span class="nc" id="L25">public class WiremockServiceImpl extends WiremockService {</span>
+
+  WireMockServer wireMockServer;
+
+  public WireMockServer getWiremockServer() {
+<span class="nc" id="L30">    return wireMockServer;</span>
+  }
+
+  public static void setupOauthMocks(Stubbing s, boolean isAdmin) {
+<span class="nc" id="L34">    s.stubFor(</span>
+<span class="nc" id="L35">        get(urlPathMatching(&quot;/oauth/authorize.*&quot;))</span>
+<span class="nc" id="L36">            .willReturn(</span>
+<span class="nc" id="L37">                aResponse()</span>
+<span class="nc" id="L38">                    .withStatus(200)</span>
+<span class="nc" id="L39">                    .withHeader(&quot;Content-Type&quot;, &quot;text/html&quot;)</span>
+<span class="nc" id="L40">                    .withHeader(&quot;Set-Cookie&quot;, &quot;nonce={{request.query.nonce}};path=/&quot;)</span>
+<span class="nc" id="L41">                    .withBodyFile(&quot;login.html&quot;)));</span>
+
+<span class="nc" id="L43">    s.stubFor(</span>
+<span class="nc" id="L44">        post(urlPathEqualTo(&quot;/login&quot;))</span>
+<span class="nc" id="L45">            .willReturn(</span>
+<span class="nc" id="L46">                temporaryRedirect(</span>
+                    &quot;{{formData request.body 'form' urlDecode=true}}{{{form.redirectUri}}}?code={{{request.cookies.nonce}}}&amp;state={{{form.state}}}&quot;)));
+
+<span class="nc bnc" id="L49" title="All 2 branches missed.">    String emailAddress = isAdmin ? &quot;admingaucho@ucsb.edu&quot; : &quot;cgaucho@ucsb.edu&quot;;</span>
+
+<span class="nc" id="L51">    s.stubFor(</span>
+<span class="nc" id="L52">        post(urlPathEqualTo(&quot;/oauth/token&quot;))</span>
+<span class="nc" id="L53">            .willReturn(</span>
+<span class="nc" id="L54">                okJson(</span>
+                    &quot;&quot;&quot;
+                        {{#trim}}
+                        {{formData request.body 'form'}}
+                        {{#assign 'emailAddress'}}%s{{/assign}}
+                        {{#assign 'subject'}}{{{base64 emailAddress padding=false}}}{{/assign}}
+                        {{#assign 'accessToken'}}{{{base64 (stringFormat 'access..%%s' emailAddress) padding=false}}}{{/assign}}
+                        {{#assign 'submittedNonce'}}{{form.code}}{{/assign}}
+                        {{#assign 'idToken'}}{{#trim}}
+                        {{{jwt alg='RS256' email=emailAddress iss=request.baseUrl aud='integrationtest' nonce=submittedNonce sub=subject}}}
+                        {{/trim}}{{/assign}}
+                        {
+                        &quot;access_token&quot;:&quot;{{{accessToken}}}&quot;,
+                        &quot;token_type&quot;: &quot;Bearer&quot;,
+                        &quot;id_token&quot;: &quot;{{{idToken}}}&quot;
+                        }
+                        {{/trim}}&quot;&quot;&quot;
+<span class="nc" id="L71">                        .formatted(emailAddress))));</span>
+
+<span class="nc" id="L73">    s.stubFor(</span>
+<span class="nc" id="L74">        get(urlPathMatching(&quot;/userinfo&quot;))</span>
+<span class="nc" id="L75">            .willReturn(</span>
+<span class="nc" id="L76">                aResponse()</span>
+<span class="nc" id="L77">                    .withStatus(200)</span>
+<span class="nc" id="L78">                    .withHeader(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
+<span class="nc" id="L79">                    .withBody(</span>
+                        &quot;&quot;&quot;
+                            {{#trim}}
+                            {{#assign 'accessToken'}}{{{regexExtract request.headers.Authorization.0 '[^\\\\s]*$'}}}{{/assign}}
+                            {{#assign 'email'}}%s{{/assign}}
+                            {{#assign 'sub'}}{{{base64 email padding=false}}}{{/assign}}
+                            {
+                            &quot;email&quot;: &quot;{{{email}}}&quot;,
+                            &quot;sub&quot;: &quot;{{{sub}}}&quot;,
+                            &quot;name&quot;: &quot;Test User&quot;,
+                            &quot;given_name&quot;: &quot;Test&quot;,
+                            &quot;family_name&quot;: &quot;User&quot;,
+                            &quot;picture&quot;: &quot;https://example.com/photo.jpg&quot;
+                            }
+                            {{/trim}}&quot;&quot;&quot;
+<span class="nc" id="L94">                            .formatted(emailAddress))));</span>
+
+<span class="nc" id="L96">    s.stubFor(</span>
+<span class="nc" id="L97">        get(urlPathMatching(&quot;/.well-known/jwks\\.json&quot;))</span>
+<span class="nc" id="L98">            .willReturn(</span>
+<span class="nc" id="L99">                aResponse()</span>
+<span class="nc" id="L100">                    .withStatus(200)</span>
+<span class="nc" id="L101">                    .withHeader(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
+<span class="nc" id="L102">                    .withBody(&quot;{{{jwks}}}&quot;)));</span>
+<span class="nc" id="L103">  }</span>
+
+  public void init() {
+<span class="nc" id="L106">    log.info(&quot;WiremockServiceImpl.init() called&quot;);</span>
+<span class="nc" id="L107">    WireMockServer server =</span>
+        new WireMockServer(
+<span class="nc" id="L109">            wireMockConfig()</span>
+<span class="nc" id="L110">                .port(8090)</span>
+<span class="nc" id="L111">                .globalTemplating(true)</span>
+<span class="nc" id="L112">                .extensions(new JwtExtensionFactory())</span>
+<span class="nc" id="L113">                .notifier(new ConsoleNotifier(true)));</span>
+<span class="nc" id="L114">    setupOauthMocks(server, true);</span>
+<span class="nc" id="L115">    server.start();</span>
+<span class="nc" id="L116">    this.wireMockServer = server;</span>
+<span class="nc" id="L117">    log.info(&quot;WiremockServiceImpl.init() completed&quot;);</span>
+<span class="nc" id="L118">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
