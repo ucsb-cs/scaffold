@@ -48,8 +48,7 @@ public class SecurityConfig {
         .oauth2Login(
             oauth2 ->
                 oauth2
-                    .userInfoEndpoint(
-                        userInfo -> userInfo.oidcUserService(googleSignInService))
+                    .userInfoEndpoint(userInfo -> userInfo.oidcUserService(googleSignInService))
                     .defaultSuccessUrl("/login/success"))
         .csrf(
             csrf ->
@@ -76,10 +75,7 @@ public class SecurityConfig {
 
   @Bean
   public static RoleHierarchy roleHierarchy() {
-    return RoleHierarchyImpl.withDefaultRolePrefix()
-        .role("ADMIN")
-        .implies("USER")
-        .build();
+    return RoleHierarchyImpl.withDefaultRolePrefix().role("ADMIN").implies("USER").build();
   }
 }
 

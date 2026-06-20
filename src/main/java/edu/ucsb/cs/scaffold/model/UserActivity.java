@@ -1,13 +1,12 @@
 package edu.ucsb.cs.scaffold.model;
 
 import jakarta.persistence.*;
+import java.time.Instant;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.Instant;
-import java.util.UUID;
 
 @Entity
 @Table(name = "user_activity")
@@ -16,21 +15,21 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UserActivity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @Column(nullable = false)
-    private Long userid;
+  @Column(nullable = false)
+  private Long userid;
 
-    @Column(name = "event_type", nullable = false)
-    private String eventType;
+  @Column(name = "event_type", nullable = false)
+  private String eventType;
 
-    @Lob
-    @Column(nullable = false)
-    private String payload;
+  @Lob
+  @Column(nullable = false)
+  private String payload;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt;
+  @CreationTimestamp
+  @Column(name = "created_at", nullable = false, updatable = false)
+  private Instant createdAt;
 }
