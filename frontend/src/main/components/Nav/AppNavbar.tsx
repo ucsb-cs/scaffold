@@ -1,6 +1,20 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
+import { useCurrentUser, useLogout } from '../../utils/currentUser'
+import { useSystemInfo } from '../../utils/systemInfo'
 
 export default function AppNavbar() {
+  const currentUser = useCurrentUser()
+  const logout = useLogout()
+  const { data: systemInfo } = useSystemInfo()
+
+  const handleLogin = () => {
+    window.location.href = systemInfo?.oauthLogin ?? '/oauth2/authorization/google'
+  }
+
+  const handleLogout = () => {
+    logout.mutate()
+  }
+
   return (
     <header
       style={{
@@ -39,7 +53,47 @@ export default function AppNavbar() {
         >
           UCSB CS concept graph
         </span>
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {currentUser?.loggedIn ? (
+            <>
+              <span style={{ color: '#475569', fontSize: '0.9rem' }}>
+                {(currentUser.root as { user?: { email?: string } })?.user?.email}
+              </span>
+              <button
+                onClick={handleLogout}
+                style={{
+                  padding: '6px 14px',
+                  background: '#1E293B',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                }}
+              >
+                Log Out
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={handleLogin}
+              style={{
+                padding: '6px 14px',
+                background: '#1E293B',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: 600,
+              }}
+            >
+              Log In
+            </button>
+          )}
+        </div>
       </div>
     </header>
-  );
+  )
 }

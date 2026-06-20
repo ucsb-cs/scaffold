@@ -23,7 +23,7 @@ public class UserActivityController {
     @Operation(summary = "Insert a user activity event")
     @PostMapping("/api/user-activity")
     public ResponseEntity<Void> insertUserActivity(@RequestBody UserActivityRequest body) {
-        if (body.userid() == null || body.userid().isBlank() || body.eventType() == null || body.eventType().isBlank()) {
+        if (body.userid() == null || body.eventType() == null || body.eventType().isBlank()) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -43,6 +43,6 @@ public class UserActivityController {
         }
     }
 
-    public record UserActivityRequest(String userid, @JsonProperty("event_type") String eventType, JsonNode payload) {
+    public record UserActivityRequest(Long userid, @JsonProperty("event_type") String eventType, JsonNode payload) {
     }
 }

@@ -7,6 +7,7 @@ import ConsentScreen from '../components/ConsentScreen';
 import QuestionSearch from '../components/QuestionSearch';
 import AssessmentSelect from '../components/AssessmentSelect';
 import { conceptContent, type ConceptContent } from '../data/conceptContent';
+import { useCurrentUser } from '../utils/currentUser';
 
 const normalize = (s: string) => s.replace(/\\n/g, '\n');
 
@@ -40,6 +41,13 @@ interface SavedDetailCard {
 }
 
 export default function HomePage() {
+  const currentUser = useCurrentUser();
+  // Derive the numeric id from the users table; null when not logged in.
+  const userId: number | null =
+    currentUser?.loggedIn
+      ? ((currentUser.root as { user?: { id?: number } })?.user?.id ?? null)
+      : null;
+
   const [assessments, setAssessments]                       = useState<Assessment[]>([]);
   const [questions, setQuestions]                           = useState<Question[]>([]);
   const [selectedAssessmentId, setSelectedAssessmentId]     = useState('');
@@ -48,14 +56,13 @@ export default function HomePage() {
   const [selectedConceptId, setSelectedConceptId]           = useState<string | null>(null);
   const [highlightedSubconcepts, setHighlightedSubconcepts] = useState<Map<string, Set<string>>>(new Map());
   const [selectedItem, setSelectedItem]                     = useState<string | null>(null);
-  const [studentUserId, setStudentUserId]                   = useState<string | null>(null);
   const [starredIds, setStarredIds]                         = useState<Set<string>>(new Set());
   const [closeHovered, setCloseHovered]                     = useState(false);
   const [savedDetailCards, setSavedDetailCards]             = useState<SavedDetailCard[]>([]);
   const [initialDetailCards, setInitialDetailCards]         = useState<SavedDetailCard[]>([]);
   const [addedDetailKeys, setAddedDetailKeys]               = useState<Set<string>>(new Set());
   const [masteredSubconcepts, setMasteredSubconcepts] = useState<Set<string>>(new Set());
-  
+
   const masteredSubconceptsRef = useRef<Set<string>>(masteredSubconcepts);
   useEffect(() => { masteredSubconceptsRef.current = masteredSubconcepts; }, [masteredSubconcepts]);
 
@@ -65,19 +72,39 @@ export default function HomePage() {
   const savedDetailCardsRef = useRef<SavedDetailCard[]>(savedDetailCards);
   useEffect(() => { savedDetailCardsRef.current = savedDetailCards; }, [savedDetailCards]);
 
+  // Load the user's saved state once on login.
+  const userStateLoadedRef = useRef(false);
+  useEffect(() => {
+    if (!userId || userStateLoadedRef.current) return;
+    userStateLoadedRef.current = true;
+
+    logUserActivity({ userid: userId, event_type: 'login', payload: { consented: true } });
+
+    fetchUserState(userId).then(data => {
+      if (data) {
+        setStarredIds(new Set(data.starred_ids as string[]));
+        const cards = (data.detail_cards as SavedDetailCard[]) ?? [];
+        setSavedDetailCards(cards);
+        setAddedDetailKeys(new Set(cards.map(c => `${c.cardType}:${c.itemLabel}`)));
+        setInitialDetailCards(cards);
+        setMasteredSubconcepts(new Set((data.mastered_subconcepts ?? []) as string[]));
+      }
+    });
+  }, [userId]);
+
   const persistState = useCallback(async (
-    userid: string,
     stars: Set<string>,
     cards: SavedDetailCard[],
     mastered: Set<string> = masteredSubconceptsRef.current,
   ) => {
+    if (!userId) return;
     await saveUserState({
-      userid,
+      userid: userId,
       starred_ids: Array.from(stars),
       detail_cards: cards,
       mastered_subconcepts: Array.from(mastered),
     });
-  }, []);
+  }, [userId]);
 
   const handleSubconceptMastered = (sub: string) => {
     setMasteredSubconcepts(prev => {
@@ -87,19 +114,15 @@ export default function HomePage() {
       } else {
         next.add(sub);
       }
-      persistState(studentUserId!, starredIdsRef.current, savedDetailCardsRef.current, next);
+      persistState(starredIdsRef.current, savedDetailCardsRef.current, next);
       return next;
     });
   };
 
   const logActivity = useCallback(async (eventType: string, payload: object) => {
-    if (!studentUserId) return;
-    await logUserActivity({
-      userid: studentUserId,
-      event_type: eventType,
-      payload,
-    });
-  }, [studentUserId]);
+    if (!userId) return;
+    await logUserActivity({ userid: userId, event_type: eventType, payload });
+  }, [userId]);
 
   const handlePaneClick = () => {
     if (!selectedQuestionId) {
@@ -157,27 +180,6 @@ export default function HomePage() {
     ? majorConcepts.find(c => c.id === selectedConceptId)
     : null;
 
-  const handleConsentComplete = async (userid: string, consented: boolean) => {
-    setStudentUserId(userid);
-
-    await logUserActivity({
-      userid,
-      event_type: 'login',
-      payload: { consented },
-    });
-
-    const data = await fetchUserState(userid);
-
-    if (data) {
-      setStarredIds(new Set(data.starred_ids as string[]));
-      const cards = (data.detail_cards as SavedDetailCard[]) ?? [];
-      setSavedDetailCards(cards);
-      setAddedDetailKeys(new Set(cards.map(c => `${c.cardType}:${c.itemLabel}`)));
-      setInitialDetailCards(cards);
-      setMasteredSubconcepts(new Set((data.mastered_subconcepts ?? []) as string[]));
-    }
-  };
-
   const handleConceptClick = (id: string) => {
     setSelectedConceptId(id);
     if (!selectedQuestionId) {
@@ -194,7 +196,7 @@ export default function HomePage() {
       } else {
         next.add(id);
       }
-      persistState(studentUserId!, next, savedDetailCardsRef.current);
+      persistState(next, savedDetailCardsRef.current);
       return next;
     });
   };
@@ -209,7 +211,7 @@ export default function HomePage() {
     setSavedDetailCards([]);
     setAddedDetailKeys(new Set());
     setMasteredSubconcepts(new Set());
-    persistState(studentUserId!, new Set(), [], new Set());
+    persistState(new Set(), [], new Set());
   };
 
   const handleDetailAdded = (card: SavedDetailCard) => {
@@ -217,7 +219,7 @@ export default function HomePage() {
     setAddedDetailKeys(prev => new Set([...prev, key]));
     setSavedDetailCards(prev => {
       const next = [...prev, card];
-      persistState(studentUserId!, starredIdsRef.current, next);
+      persistState(starredIdsRef.current, next);
       return next;
     });
     logActivity('detail_added_to_graph', {
@@ -232,7 +234,7 @@ export default function HomePage() {
     setAddedDetailKeys(prev => { const s = new Set(prev); s.delete(key); return s; });
     setSavedDetailCards(prev => {
       const next = prev.filter(c => !(c.cardType === cardType && c.itemLabel === itemLabel));
-      persistState(studentUserId!, starredIdsRef.current, next);
+      persistState(starredIdsRef.current, next);
       return next;
     });
   };
@@ -244,13 +246,13 @@ export default function HomePage() {
           ? { ...c, posX, posY }
           : c
       );
-      persistState(studentUserId!, starredIdsRef.current, next);
+      persistState(starredIdsRef.current, next);
       return next;
     });
   };
 
-  if (!studentUserId) {
-    return <ConsentScreen onComplete={handleConsentComplete} />;
+  if (!currentUser?.loggedIn) {
+    return <ConsentScreen />;
   }
 
   return (
@@ -463,7 +465,7 @@ export default function HomePage() {
           const selectedItemLabel = selectedItem === selectedConcept.id
             ? selectedConcept.label.replace(/\n/g, ' ')
             : selectedItem ?? '';
-          
+
           const contentKey = selectedItem === selectedConcept.id
             ? selectedConcept.id
             : `${selectedConcept.id}:${selectedItem}`;

@@ -1,5 +1,41 @@
 # scaffold
 
+## Setup before running
+
+Before running the application for the first time, configure your OAuth credentials:
+
+```
+cp .env.SAMPLE .env
+```
+
+Then fill in the values in `.env`:
+
+| Variable | Description | Setup Guide |
+|----------|-------------|-------------|
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID | [`docs/oauth.md`](docs/oauth.md) |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret | [`docs/oauth.md`](docs/oauth.md) |
+| `ADMIN_EMAILS` | Comma-separated admin email addresses | [`docs/oauth.md`](docs/oauth.md) |
+
+See [`docs/oauth.md`](docs/oauth.md) for full setup instructions, including Dokku deployment.
+
+## Getting started on localhost
+
+Open two terminal windows:
+
+```bash
+# Terminal 1 – backend
+mvn spring-boot:run
+```
+
+```bash
+# Terminal 2 – frontend
+cd frontend
+npm install   # first time only
+npm start
+```
+
+The app is available at <http://localhost:8080>. Use port **8080** (not 3000) so that Google OAuth redirects work correctly.
+
 ## Local H2 Console (development profile)
 
 When running locally with:
