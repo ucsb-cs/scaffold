@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs/scaffold
 owner: ucsb-cs
 repo_name: scaffold
-pull_requests: [{"author":{"id":"MDQ6VXNlcjExMTkwMTc=","is_bot":false,"login":"pconrad","name":"Phill Conrad"},"headRefName":"pc-admin-functions-backend","number":13,"title":"pc - add wiremock and backend for admins, instructors","url":"https://github.com/ucsb-cs/scaffold/pull/13"}]
+pull_requests: [{"author":{"id":"MDQ6VXNlcjExMTkwMTc=","is_bot":false,"login":"pconrad","name":"Phill Conrad"},"headRefName":"pc-dev-container-test-coverage","number":18,"title":"pc - add test coverage","url":"https://github.com/ucsb-cs/scaffold/pull/18"},{"author":{"id":"MDQ6VXNlcjExMTkwMTc=","is_bot":false,"login":"pconrad","name":"Phill Conrad"},"headRefName":"pc-admin-functions-backend","number":13,"title":"pc - add wiremock and backend for admins, instructors","url":"https://github.com/ucsb-cs/scaffold/pull/13"}]
