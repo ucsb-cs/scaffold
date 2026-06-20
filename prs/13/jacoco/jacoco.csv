@@ -1,7 +1,4 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-scaffold,edu.ucsb.cs.scaffold.services.wiremock,WiremockService,0,3,0,0,0,1,0,1,0,1
-scaffold,edu.ucsb.cs.scaffold.services.wiremock,WiremockServiceDummy,4,9,0,0,2,3,1,3,1,3
-scaffold,edu.ucsb.cs.scaffold.services.wiremock,WiremockServiceImpl,155,0,2,0,49,0,6,0,5,0
 scaffold,edu.ucsb.cs.scaffold.controller,AdminsController,0,82,0,2,0,16,0,8,0,7
 scaffold,edu.ucsb.cs.scaffold.controller,UserActivityController.UserActivityRequest,0,12,0,0,0,1,0,1,0,1
 scaffold,edu.ucsb.cs.scaffold.controller,HealthController,0,7,0,0,0,2,0,2,0,2
