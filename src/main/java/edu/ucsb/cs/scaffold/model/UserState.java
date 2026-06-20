@@ -19,7 +19,7 @@ public class UserState {
     private UUID id;
 
     @Column(nullable = false, unique = true)
-    private String userid;
+    private Long userid;
 
     @Lob
     @Column(name = "starred_ids", nullable = false)

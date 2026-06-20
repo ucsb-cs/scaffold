@@ -27,7 +27,7 @@ public class UserStateController {
     @Operation(summary = "Get saved user state by user ID")
     @GetMapping("/api/user-state/{userid}")
     public ResponseEntity<UserStateResponse> getUserState(
-            @Parameter(description = "User ID") @PathVariable String userid) {
+            @Parameter(description = "User ID (from users table)") @PathVariable Long userid) {
         return userStateRepository.findByUserid(userid)
                 .map(state -> ResponseEntity.ok(new UserStateResponse(
                         parseStringList(state.getStarredIds()),
@@ -40,7 +40,7 @@ public class UserStateController {
     @Operation(summary = "Upsert saved user state by user ID")
     @PostMapping("/api/user-state")
     public ResponseEntity<Void> upsertUserState(@RequestBody UserStateRequest body) {
-        if (body.userid() == null || body.userid().isBlank()) {
+        if (body.userid() == null) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -56,8 +56,7 @@ public class UserStateController {
 
     private List<String> parseStringList(String json) {
         try {
-            return objectMapper.readValue(json, new TypeReference<>() {
-            });
+            return objectMapper.readValue(json, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Unable to parse stored string list JSON", e);
         }
@@ -80,7 +79,7 @@ public class UserStateController {
     }
 
     public record UserStateRequest(
-            String userid,
+            Long userid,
             @JsonProperty("starred_ids") List<String> starredIds,
             @JsonProperty("detail_cards") JsonNode detailCards,
             @JsonProperty("mastered_subconcepts") List<String> masteredSubconcepts) {

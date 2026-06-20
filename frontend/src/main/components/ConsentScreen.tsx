@@ -1,26 +1,10 @@
-import { useState } from 'react';
-import { validateUserId } from '../api/client';
+import { useSystemInfo } from '../utils/systemInfo';
 
-interface ConsentScreenProps {
-  onComplete: (userid: string, consented: boolean) => void;
-}
+export default function ConsentScreen() {
+  const { data: systemInfo } = useSystemInfo();
 
-export default function ConsentScreen({ onComplete }: ConsentScreenProps) {
-  const [userid, setUserid]   = useState('');
-  const [error, setError]     = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const handleUserIdSubmit = async () => {
-    if (userid.length !== 4) return;
-    setLoading(true);
-    setError('');
-    const valid = await validateUserId(userid);
-    if (valid) {
-      onComplete(userid, true);
-    } else {
-      setError('Invalid user ID.');
-    }
-    setLoading(false);
+  const handleLogin = () => {
+    window.location.href = systemInfo?.oauthLogin ?? '/oauth2/authorization/google';
   };
 
   return (
@@ -54,39 +38,19 @@ export default function ConsentScreen({ onComplete }: ConsentScreenProps) {
         }}>
           Scaffold
         </div>
-        <div style={{ fontSize: 14, color: '#64748B', marginBottom: 20, marginTop: 20 }}>
-          Enter your assigned user ID to continue.
+        <div style={{ fontSize: 14, color: '#64748B', marginBottom: 28, marginTop: 20 }}>
+          Sign in to continue.
         </div>
-        <input
-          type="text"
-          inputMode="numeric"
-          maxLength={4}
-          value={userid}
-          onChange={e => setUserid(e.target.value.replace(/\D/g, ''))}
-          onKeyDown={e => e.key === 'Enter' && handleUserIdSubmit()}
-          placeholder="0000"
-          style={{
-            width: '100%', padding: '10px 14px', fontSize: 24,
-            textAlign: 'center', letterSpacing: '0.3em',
-            border: '1px solid #CBD5E1', borderRadius: 8,
-            outline: 'none', marginBottom: 12,
-            boxSizing: 'border-box',
-          }}
-        />
-        {error && (
-          <div style={{ color: '#DC2626', fontSize: 13, marginBottom: 12 }}>{error}</div>
-        )}
         <button
-          onClick={handleUserIdSubmit}
-          disabled={userid.length !== 4 || loading}
+          onClick={handleLogin}
           style={{
             width: '100%', padding: '10px 0', fontSize: 14, fontWeight: 600,
-            background: userid.length === 4 ? '#1E293B' : '#CBD5E1',
+            background: '#1E293B',
             color: '#fff', border: 'none', borderRadius: 8,
-            cursor: userid.length === 4 ? 'pointer' : 'default',
+            cursor: 'pointer',
           }}
         >
-          {loading ? 'Checking…' : 'Continue'}
+          Log In with Google
         </button>
       </div>
     </div>
