@@ -16,8 +16,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 /**
  * Verifies that after login, the user can see the main page with the concept graph.
  *
- * <p>Prerequisites: the frontend must be built ({@code npm run build} inside {@code frontend/})
- * so that {@code target/classes/public/index.html} exists. Run with:
+ * <p>Prerequisites: the frontend must be built ({@code npm run build} inside {@code frontend/}) so
+ * that {@code target/classes/public/index.html} exists. Run with:
+ *
  * <pre>INTEGRATION=true mvn test</pre>
  */
 @ExtendWith(SpringExtension.class)

@@ -37,13 +37,17 @@ public class InstructorsControllerTests extends ControllerTestCase {
 
   @Test
   public void logged_out_users_cannot_post() throws Exception {
-    mockMvc.perform(post("/api/admin/instructors/post?email=test@ucsb.edu")).andExpect(status().is(403));
+    mockMvc
+        .perform(post("/api/admin/instructors/post?email=test@ucsb.edu"))
+        .andExpect(status().is(403));
   }
 
   @WithMockUser(roles = {"USER"})
   @Test
   public void logged_in_users_cannot_post() throws Exception {
-    mockMvc.perform(post("/api/admin/instructors/post?email=test@ucsb.edu")).andExpect(status().is(403));
+    mockMvc
+        .perform(post("/api/admin/instructors/post?email=test@ucsb.edu"))
+        .andExpect(status().is(403));
   }
 
   @WithMockUser(roles = {"ADMIN"})

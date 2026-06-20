@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
- * Reloads a user's security context on each request so that role changes (admin/instructor
- * added or removed in the database) take effect without requiring re-login.
+ * Reloads a user's security context on each request so that role changes (admin/instructor added or
+ * removed in the database) take effect without requiring re-login.
  */
 @Component
 public class RoleUpdateInterceptor implements HandlerInterceptor {

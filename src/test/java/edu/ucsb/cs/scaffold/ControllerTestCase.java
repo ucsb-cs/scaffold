@@ -1,5 +1,8 @@
 package edu.ucsb.cs.scaffold;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ucsb.cs.scaffold.config.SecurityConfig;
@@ -17,12 +20,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 /**
- * Base class for all controller tests. Provides MockMvc, ObjectMapper, and a
- * no-op RoleUpdateInterceptor so individual tests don't need to mock
+ * Base class for all controller tests. Provides MockMvc, ObjectMapper, and a no-op
+ * RoleUpdateInterceptor so individual tests don't need to mock
  * AdminRepository/InstructorRepository.
  */
 @ActiveProfiles("test")

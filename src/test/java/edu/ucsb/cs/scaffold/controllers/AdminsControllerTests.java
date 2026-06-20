@@ -31,8 +31,7 @@ import org.springframework.test.web.servlet.MvcResult;
 @WebMvcTest(controllers = AdminsController.class)
 @Import(edu.ucsb.cs.scaffold.testconfig.TestConfig.class)
 @TestPropertySource(
-    properties =
-        "app.admin.emails=djensen@ucsb.edu,phtcon@ucsb.edu,acdamstedt@ucsb.edu")
+    properties = "app.admin.emails=djensen@ucsb.edu,phtcon@ucsb.edu,acdamstedt@ucsb.edu")
 public class AdminsControllerTests extends ControllerTestCase {
 
   @MockitoBean AdminRepository adminRepository;
@@ -74,13 +73,17 @@ public class AdminsControllerTests extends ControllerTestCase {
 
   @Test
   public void logged_out_users_cannot_delete() throws Exception {
-    mockMvc.perform(delete("/api/admin/delete?email=someone@gmail.com")).andExpect(status().is(403));
+    mockMvc
+        .perform(delete("/api/admin/delete?email=someone@gmail.com"))
+        .andExpect(status().is(403));
   }
 
   @WithMockUser(roles = {"USER"})
   @Test
   public void logged_in_regular_users_cannot_delete() throws Exception {
-    mockMvc.perform(delete("/api/admin/delete?email=someone@gmail.com")).andExpect(status().is(403));
+    mockMvc
+        .perform(delete("/api/admin/delete?email=someone@gmail.com"))
+        .andExpect(status().is(403));
   }
 
   // Functionality tests

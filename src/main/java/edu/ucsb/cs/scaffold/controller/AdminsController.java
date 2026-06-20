@@ -65,7 +65,8 @@ public class AdminsController extends ApiController {
             .findByEmail(email)
             .orElseThrow(() -> new EntityNotFoundException(Admin.class, email));
     if (adminEmails.contains(email)) {
-      throw new UnsupportedOperationException("Forbidden to delete an admin from ADMIN_EMAILS list");
+      throw new UnsupportedOperationException(
+          "Forbidden to delete an admin from ADMIN_EMAILS list");
     }
     adminRepository.delete(admin);
     return genericMessage("Admin with id %s deleted".formatted(email));

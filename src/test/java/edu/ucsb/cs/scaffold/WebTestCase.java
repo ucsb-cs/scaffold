@@ -85,8 +85,7 @@ public abstract class WebTestCase {
     BrowserContext context = browser.newContext();
     page = context.newPage();
 
-    String url =
-        String.format("http://localhost:%d/oauth2/authorization/my-oauth-provider", port);
+    String url = String.format("http://localhost:%d/oauth2/authorization/my-oauth-provider", port);
     page.navigate(url);
 
     page.locator("#username").fill(email);

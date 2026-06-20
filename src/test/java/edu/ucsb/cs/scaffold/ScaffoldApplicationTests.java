@@ -40,13 +40,16 @@ class ScaffoldApplicationTests {
         .andExpect(content().json("[]"));
   }
 
-    @Test
-    void userStateCanBeUpsertedAndFetchedByUserId() throws Exception {
-        userStateRepository.deleteAll();
+  @Test
+  void userStateCanBeUpsertedAndFetchedByUserId() throws Exception {
+    userStateRepository.deleteAll();
 
-        mockMvc.perform(post("/api/user-state")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+    mockMvc
+        .perform(
+            post("/api/user-state")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    """
                                 {
                                   "userid": 1234,
                                   "starred_ids": ["graph-a", "graph-b"],
@@ -57,7 +60,7 @@ class ScaffoldApplicationTests {
         .andExpect(status().isNoContent());
 
     mockMvc
-        .perform(get("/api/user-state/1"))
+        .perform(get("/api/user-state/1234"))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.starred_ids[0]").value("graph-a"))
@@ -70,9 +73,8 @@ class ScaffoldApplicationTests {
   void missingUserStateReturns404() throws Exception {
     userStateRepository.deleteAll();
 
-        mockMvc.perform(get("/api/user-state/0"))
-                .andExpect(status().isNotFound());
-    }
+    mockMvc.perform(get("/api/user-state/0")).andExpect(status().isNotFound());
+  }
 
   @Test
   void userActivityCanBeLogged() throws Exception {
