@@ -1,6 +1,7 @@
 package edu.ucsb.cs.scaffold.interceptors;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -133,6 +134,15 @@ public class RoleUpdateInterceptorTests {
   public void non_oauth_authentication_passes_through_unchanged() throws Exception {
     mockMvc
         .perform(get("/dummycontroller/interceptorTest"))
+        .andExpect(authenticated().withRoles("USER"));
+  }
+
+  @Test
+  public void oauth2_non_oidc_authentication_passes_through_unchanged() throws Exception {
+    mockMvc
+        .perform(
+            get("/dummycontroller/interceptorTest")
+                .with(oauth2Login().authorities(new SimpleGrantedAuthority("ROLE_USER"))))
         .andExpect(authenticated().withRoles("USER"));
   }
 }
