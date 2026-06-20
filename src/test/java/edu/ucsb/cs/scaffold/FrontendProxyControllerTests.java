@@ -57,8 +57,9 @@ class FrontendProxyControllerTests {
 
     @Test
     void oauth2PathIsNotProxied() throws Exception {
+        // Spring Security intercepts /oauth2/authorization/google and redirects (302) to Google.
+        // Any non-2xx non-proxy response confirms the path is not handled by FrontendProxyController.
         mockMvc.perform(get("/oauth2/authorization/google"))
-                .andExpect(status().isNotFound())
-                .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("Failed to connect to the frontend server"))));
+                .andExpect(status().is3xxRedirection());
     }
 }
