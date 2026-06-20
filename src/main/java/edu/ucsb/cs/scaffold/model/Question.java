@@ -1,11 +1,10 @@
 package edu.ucsb.cs.scaffold.model;
 
 import jakarta.persistence.*;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.UUID;
 
 @Entity
 @Table(name = "questions")
@@ -14,16 +13,16 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Question {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @Column(name = "assessment_id", nullable = false)
-    private UUID assessmentId;
+  @Column(name = "assessment_id", nullable = false)
+  private UUID assessmentId;
 
-    @Column(name = "pl_question_uuid")
-    private String plQuestionUuid;
+  @Column(name = "pl_question_uuid")
+  private String plQuestionUuid;
 
-    @Column(nullable = false)
-    private String title;
+  @Column(nullable = false)
+  private String title;
 }
