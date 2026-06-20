@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"edu.ucsb.cs.scaffold"},{"l":"edu.ucsb.cs.scaffold.config"},{"l":"edu.ucsb.cs.scaffold.controller"},{"l":"edu.ucsb.cs.scaffold.entity"},{"l":"edu.ucsb.cs.scaffold.model"},{"l":"edu.ucsb.cs.scaffold.repository"},{"l":"edu.ucsb.cs.scaffold.services"}];updateSearchResults();

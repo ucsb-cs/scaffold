@@ -1,0 +1,7 @@
+edu.ucsb.cs.scaffold
+edu.ucsb.cs.scaffold.config
+edu.ucsb.cs.scaffold.controller
+edu.ucsb.cs.scaffold.entity
+edu.ucsb.cs.scaffold.model
+edu.ucsb.cs.scaffold.repository
+edu.ucsb.cs.scaffold.services
