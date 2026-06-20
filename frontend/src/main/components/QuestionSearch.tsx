@@ -20,12 +20,14 @@ export default function QuestionSearch({
 
   // Reset when the questions list changes (new assessment selected)
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setInputValue("");
     setIsOpen(false);
   }, [questions]);
 
   // Reset if question is cleared externally
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!selectedQuestionId) setInputValue("");
   }, [selectedQuestionId]);
 

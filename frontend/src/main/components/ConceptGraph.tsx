@@ -630,7 +630,7 @@ export default function ConceptGraph({
 
     setNodes((prev) => [...prev, ...newNodes]);
     setEdges((prev) => [...prev, ...newEdges]);
-  }, [restoredDetailCards]);
+  }, [restoredDetailCards, setNodes, setEdges]);
 
   const rfInstance = useRef<ReactFlowInstance<Node, Edge> | null>(null);
 
@@ -717,7 +717,7 @@ export default function ConceptGraph({
         posY: position.y,
       });
     },
-    [setNodes, setEdges],
+    [setNodes, setEdges, onDetailAdded],
   );
 
   // Update node appearance when highlighted set changes
