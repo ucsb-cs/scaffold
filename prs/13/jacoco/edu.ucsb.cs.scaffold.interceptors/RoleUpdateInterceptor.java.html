@@ -40,7 +40,7 @@ public class RoleUpdateInterceptor implements HandlerInterceptor {
 <span class="fc" id="L40">    Authentication authentication = securityContext.getAuthentication();</span>
 
 <span class="fc bfc" id="L42" title="All 2 branches covered.">    if (authentication instanceof OAuth2AuthenticationToken oauthToken</span>
-<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        &amp;&amp; oauthToken.getPrincipal() instanceof OidcUser oidcUser) {</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        &amp;&amp; oauthToken.getPrincipal() instanceof OidcUser oidcUser) {</span>
 <span class="fc" id="L44">      String email = oidcUser.getEmail();</span>
 <span class="fc" id="L45">      Set&lt;GrantedAuthority&gt; newAuthorities = new HashSet&lt;&gt;();</span>
 <span class="fc" id="L46">      Collection&lt;? extends GrantedAuthority&gt; current = authentication.getAuthorities();</span>
