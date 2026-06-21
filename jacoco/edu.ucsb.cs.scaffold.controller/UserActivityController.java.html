@@ -23,15 +23,15 @@ public class UserActivityController {
   @Operation(summary = &quot;Insert a user activity event&quot;)
   @PostMapping(&quot;/api/user-activity&quot;)
   public ResponseEntity&lt;Void&gt; insertUserActivity(@RequestBody UserActivityRequest body) {
-<span class="pc bpc" id="L26" title="3 of 6 branches missed.">    if (body.userid() == null || body.eventType() == null || body.eventType().isBlank()) {</span>
-<span class="nc" id="L27">      return ResponseEntity.badRequest().build();</span>
+<span class="fc bfc" id="L26" title="All 6 branches covered.">    if (body.userid() == null || body.eventType() == null || body.eventType().isBlank()) {</span>
+<span class="fc" id="L27">      return ResponseEntity.badRequest().build();</span>
     }
 
 <span class="fc" id="L30">    UserActivity activity = new UserActivity();</span>
 <span class="fc" id="L31">    activity.setUserid(body.userid());</span>
 <span class="fc" id="L32">    activity.setEventType(body.eventType());</span>
 <span class="fc" id="L33">    activity.setPayload(</span>
-<span class="pc bpc" id="L34" title="1 of 2 branches missed.">        writeJson(body.payload() == null ? objectMapper.createObjectNode() : body.payload()));</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        writeJson(body.payload() == null ? objectMapper.createObjectNode() : body.payload()));</span>
 <span class="fc" id="L35">    userActivityRepository.save(activity);</span>
 <span class="fc" id="L36">    return ResponseEntity.noContent().build();</span>
   }
@@ -39,8 +39,8 @@ public class UserActivityController {
   private String writeJson(Object value) {
     try {
 <span class="fc" id="L41">      return objectMapper.writeValueAsString(value);</span>
-<span class="nc" id="L42">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L43">      throw new IllegalArgumentException(&quot;Unable to serialize JSON payload&quot;, e);</span>
+<span class="fc" id="L42">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L43">      throw new IllegalArgumentException(&quot;Unable to serialize JSON payload&quot;, e);</span>
     }
   }
 

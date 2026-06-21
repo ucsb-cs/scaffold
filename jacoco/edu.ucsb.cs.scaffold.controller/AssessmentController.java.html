@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,20 +20,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AssessmentController {
 
-  private final AssessmentRepository assessmentRepository;
-  private final QuestionRepository questionRepository;
+  @Autowired private final AssessmentRepository assessmentRepository;
+
+  @Autowired private final QuestionRepository questionRepository;
 
   @Operation(summary = &quot;List all assessments ordered by name&quot;)
   @GetMapping(&quot;/api/assessments&quot;)
   public List&lt;Assessment&gt; getAssessments() {
-<span class="fc" id="L28">    return assessmentRepository.findAllByOrderByNameAsc();</span>
+<span class="fc" id="L30">    return assessmentRepository.findAllByOrderByNameAsc();</span>
   }
 
   @Operation(summary = &quot;List questions for an assessment ordered by title&quot;)
   @GetMapping(&quot;/api/assessments/{assessmentId}/questions&quot;)
   public List&lt;Question&gt; getQuestions(
       @Parameter(description = &quot;UUID of the assessment&quot;) @PathVariable UUID assessmentId) {
-<span class="nc" id="L35">    return questionRepository.findByAssessmentIdOrderByTitleAsc(assessmentId);</span>
+<span class="fc" id="L37">    return questionRepository.findByAssessmentIdOrderByTitleAsc(assessmentId);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -42,18 +42,18 @@ public class UserStateController {
   @Operation(summary = &quot;Upsert saved user state by user ID&quot;)
   @PostMapping(&quot;/api/user-state&quot;)
   public ResponseEntity&lt;Void&gt; upsertUserState(@RequestBody UserStateRequest body) {
-<span class="pc bpc" id="L45" title="1 of 2 branches missed.">    if (body.userid() == null) {</span>
-<span class="nc" id="L46">      return ResponseEntity.badRequest().build();</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">    if (body.userid() == null) {</span>
+<span class="fc" id="L46">      return ResponseEntity.badRequest().build();</span>
     }
 
 <span class="fc" id="L49">    UserState state = userStateRepository.findByUserid(body.userid()).orElseGet(UserState::new);</span>
 <span class="fc" id="L50">    state.setUserid(body.userid());</span>
-<span class="pc bpc" id="L51" title="1 of 2 branches missed.">    state.setStarredIds(writeJson(body.starredIds() == null ? List.of() : body.starredIds()));</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">    state.setStarredIds(writeJson(body.starredIds() == null ? List.of() : body.starredIds()));</span>
 <span class="fc" id="L52">    state.setDetailCards(</span>
 <span class="fc" id="L53">        writeJson(</span>
-<span class="pc bpc" id="L54" title="1 of 2 branches missed.">            body.detailCards() == null ? objectMapper.createArrayNode() : body.detailCards()));</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">            body.detailCards() == null ? objectMapper.createArrayNode() : body.detailCards()));</span>
 <span class="fc" id="L55">    state.setMasteredSubconcepts(</span>
-<span class="pc bpc" id="L56" title="1 of 2 branches missed.">        writeJson(body.masteredSubconcepts() == null ? List.of() : body.masteredSubconcepts()));</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        writeJson(body.masteredSubconcepts() == null ? List.of() : body.masteredSubconcepts()));</span>
 <span class="fc" id="L57">    userStateRepository.save(state);</span>
 
 <span class="fc" id="L59">    return ResponseEntity.noContent().build();</span>
@@ -62,24 +62,24 @@ public class UserStateController {
   private List&lt;String&gt; parseStringList(String json) {
     try {
 <span class="fc" id="L64">      return objectMapper.readValue(json, new TypeReference&lt;&gt;() {});</span>
-<span class="nc" id="L65">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L66">      throw new IllegalStateException(&quot;Unable to parse stored string list JSON&quot;, e);</span>
+<span class="fc" id="L65">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L66">      throw new IllegalStateException(&quot;Unable to parse stored string list JSON&quot;, e);</span>
     }
   }
 
   private JsonNode parseJsonNode(String json) {
     try {
 <span class="fc" id="L72">      return objectMapper.readTree(json);</span>
-<span class="nc" id="L73">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L74">      throw new IllegalStateException(&quot;Unable to parse stored JSON payload&quot;, e);</span>
+<span class="fc" id="L73">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L74">      throw new IllegalStateException(&quot;Unable to parse stored JSON payload&quot;, e);</span>
     }
   }
 
   private String writeJson(Object value) {
     try {
 <span class="fc" id="L80">      return objectMapper.writeValueAsString(value);</span>
-<span class="nc" id="L81">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L82">      throw new IllegalArgumentException(&quot;Unable to serialize JSON payload&quot;, e);</span>
+<span class="fc" id="L81">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L82">      throw new IllegalArgumentException(&quot;Unable to serialize JSON payload&quot;, e);</span>
     }
   }
 
