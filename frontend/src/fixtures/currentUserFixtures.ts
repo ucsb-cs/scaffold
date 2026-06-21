@@ -1,11 +1,11 @@
 export const apiCurrentUserFixtures = {
   userOnly: {
-    user: { email: 'cgaucho@ucsb.edu', given_name: 'Gaucho' },
-    roles: [{ authority: 'ROLE_USER' }],
+    user: { email: "cgaucho@ucsb.edu", given_name: "Gaucho" },
+    roles: [{ authority: "ROLE_USER" }],
   },
   adminUser: {
-    user: { email: 'admin@ucsb.edu', given_name: 'Admin' },
-    roles: [{ authority: 'ROLE_USER' }, { authority: 'ROLE_ADMIN' }],
+    user: { email: "admin@ucsb.edu", given_name: "Admin" },
+    roles: [{ authority: "ROLE_USER" }, { authority: "ROLE_ADMIN" }],
   },
 };
 
@@ -15,14 +15,14 @@ export const currentUserFixtures = {
     loggedIn: true as const,
     root: {
       ...apiCurrentUserFixtures.userOnly,
-      rolesList: ['ROLE_USER'],
+      rolesList: ["ROLE_USER"],
     },
   },
   adminUser: {
     loggedIn: true as const,
     root: {
       ...apiCurrentUserFixtures.adminUser,
-      rolesList: ['ROLE_USER', 'ROLE_ADMIN'],
+      rolesList: ["ROLE_USER", "ROLE_ADMIN"],
     },
   },
 };

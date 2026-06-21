@@ -1,13 +1,13 @@
-import { vi } from 'vitest';
+import { vi } from "vitest";
 
 const mockConsole = () => {
   const originalLog = console.log;
   const originalWarn = console.warn;
   const originalError = console.error;
 
-  vi.spyOn(console, 'log').mockImplementation(() => {});
-  vi.spyOn(console, 'warn').mockImplementation(() => {});
-  vi.spyOn(console, 'error').mockImplementation(() => {});
+  vi.spyOn(console, "log").mockImplementation(() => {});
+  vi.spyOn(console, "warn").mockImplementation(() => {});
+  vi.spyOn(console, "error").mockImplementation(() => {});
 
   return () => {
     console.log = originalLog;
