@@ -1,6 +1,9 @@
 data/
 
 
+frontend/.stryker-tmp/
+frontend/reports/
+
 # Maven / Java
 target/
 *.class
