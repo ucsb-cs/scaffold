@@ -194,7 +194,7 @@ export default function HomePage() {
     if (!selectedQuestionId) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setHighlightedIds(new Set());
-       
+
       setHighlightedSubconcepts(new Map());
       return;
     }
