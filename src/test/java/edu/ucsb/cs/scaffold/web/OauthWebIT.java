@@ -2,6 +2,8 @@ package edu.ucsb.cs.scaffold.web;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 import edu.ucsb.cs.scaffold.WebTestCase;
 import edu.ucsb.cs.scaffold.testconfig.IntegrationConfig;
 import org.junit.jupiter.api.Test;
@@ -26,7 +28,15 @@ public class OauthWebIT extends WebTestCase {
     setupUser(false);
     assertThat(page.getByText("Log Out")).isVisible();
     page.getByText("Log Out").click();
-    assertThat(page.getByText("Log In")).isVisible();
+
+    assertThat(
+            page.getByRole(
+                AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Log In").setExact(true)))
+        .isVisible();
+    assertThat(
+            page.getByRole(
+                AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Log In with Google")))
+        .isVisible();
     assertThat(page.getByText("Log Out")).not().isVisible();
   }
 

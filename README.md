@@ -59,25 +59,14 @@ on port 8090, and drive a headless Chromium browser with Playwright.
      -Dexec.args="install chromium"
    ```
 
-2. Build the frontend so Spring Boot can serve it:
+2. Run with the integration flag:
    ```bash
-   cd frontend && npm install && npm run build && cd ..
-   ```
-   The built files are copied to `target/classes/public/` by the production Maven profile.
-   For integration tests you can copy them manually:
-   ```bash
-   mkdir -p target/classes/public
-   cp -r frontend/dist/* target/classes/public/
-   ```
-
-3. Run with the integration flag:
-   ```bash
-   INTEGRATION=true mvn test
+   INTEGRATION=true mvn -ntp -B test-compile failsafe:integration-test failsafe:verify
    ```
 
    To run with a visible browser (useful for debugging):
    ```bash
-   INTEGRATION=true HEADLESS=false mvn test
+   INTEGRATION=true HEADLESS=false mvn -ntp -B test-compile failsafe:integration-test failsafe:verify
    ```
 
 The integration tests are in `src/test/java/edu/ucsb/cs/scaffold/web/`:
